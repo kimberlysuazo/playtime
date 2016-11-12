@@ -2,10 +2,10 @@ $( document ).ready(function() {
     var Correct = 0
     var GameStarted = false
     var Incorrect = 0
-    var Level = 0
+    var Turn = 0
 
     // when top bar of notes are clicked
-    $('.notes').on('click', function(event) {
+    $('body').on('click', '.notes', function(event) {
         console.log("sup sup")
         let note = $(event.target).text().trim()
         if (Game) {
@@ -20,14 +20,21 @@ $( document ).ready(function() {
         $('body').append('<p>Correct: '+Correct+'</p>')
         $('body').append('<p>Incorrect: '+Incorrect+'</p>')
         GameStarted = true
+        displaySelectedNotes()
         playNextThree()
-        debugger;
     })
 
+    function displaySelectedNotes() {
+        console.log(Turn)
+        $('body').append('<p>Your Current Notes Are: </p>')
+        $('body').append($('.notes').splice(Turn*3,Turn*3+3))
+        // debugger;
+    }
+
     function playNextThree() {
-        let thirdNote = Level*3 + 3;
-        for (let i = Level*3; i < thirdNote; i++) {
-            window.setTimeout(console.log(`play note #${i}`), 1000)
+        let thirdNote = Turn*3 + 3;
+        for (let i = Turn*3; i < thirdNote; i++) {
+            // play corresponding sound
         }
     }
 
