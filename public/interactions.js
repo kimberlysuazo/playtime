@@ -3,6 +3,7 @@ $( document ).ready(function() {
     var GameStarted = false
     var Incorrect = 0
     var Turn = 0
+    var CurrentNotes = []
 
     // when top bar of notes are clicked
     $('body').on('click', '.notes', function(event) {
@@ -26,8 +27,10 @@ $( document ).ready(function() {
 
     function displaySelectedNotes() {
         console.log(Turn)
+        CurrentNotes = []
         $('body').append('<p>Your Current Notes Are: </p>')
         $('body').append($('.notes').splice(Turn*3,Turn*3+3))
+        CurrentNotes.concat($('.notes').splice(Turn*3,Turn*3+3))
         // debugger;
     }
 
@@ -36,6 +39,7 @@ $( document ).ready(function() {
         for (let i = Turn*3; i < thirdNote; i++) {
             // play corresponding sound
         }
+        playRandomNote()
     }
 
 });
