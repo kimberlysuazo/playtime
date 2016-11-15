@@ -1,6 +1,6 @@
-function playSound(noteAry) {
+var conductor = new BandJS()
 
-    var conductor = new BandJS()
+function playSound(noteAry) {
     conductor.setTimeSignature(4,4)
     conductor.setTempo(120)
     var piano = conductor.createInstrument()
@@ -49,7 +49,7 @@ $( document ).ready(function() {
         if (randomNote === guessedNote) {
                 alert("Correct! Get ready to hear your next note");
                 randomNote = playRandomNote(notesToPlay);
-                Correct += 1 
+                Correct += 1
             } else {
                 Incorrect += 1
                 alert("Oops... You have one more guess");
@@ -57,7 +57,7 @@ $( document ).ready(function() {
 
                 if (randomNote === guessedNote) {
                     alert("Correct!");
-                    Correct += 1 
+                    Correct += 1
                 } else {
                     Incorrect +=1
                     randomNote = playRandomNote(notesToPlay);
@@ -66,7 +66,7 @@ $( document ).ready(function() {
         if (Correct === 6){
             Turn += 1
             alert("DONE!");
-        }    
+        }
     })
 
     function displaySelectedNotes() {
@@ -87,7 +87,7 @@ $( document ).ready(function() {
         playSound(notesToPlay)
 
         // until the game is over
-        
+
         // play sound and then check user guess
         randomNote = playRandomNote(notesToPlay)
 
