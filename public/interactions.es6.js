@@ -23,11 +23,11 @@ $( document ).ready(function() {
     // when top bar of notes are clicked
     $('body').on('click', '.notes', function(event) {
         console.log("sup sup")
-        let note = $(event.target).text().trim()
-        if (Game) {
+        if (GameStarted) {
             console.log("game is live")
         }
-        // play corresponding sound
+        let note = $(event.target).parent().attr('id')
+        playSound([note])
     })
 
     // when Start Game is clicked
