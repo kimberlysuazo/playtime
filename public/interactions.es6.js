@@ -11,6 +11,7 @@ function playSound(noteAry) {
 
     var player = conductor.finish()
     player.play()
+
 }
 
 $( document ).ready(function() {
@@ -20,6 +21,7 @@ $( document ).ready(function() {
     var Turn = 0
     var notes = ['A4', 'A#4', 'B4', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4']
     var guessedNote
+    var randomNote
 
     // when top bar of notes are clicked
     $('body').on('click', '.notes', function(event) {
@@ -34,8 +36,8 @@ $( document ).ready(function() {
     // when Start Game is clicked
     $('#start-game').on('click', function () {
         $(this).remove()
-        $('body').append('<p>Correct: '+Correct+'</p>')
-        $('body').append('<p>Incorrect: '+Incorrect+'</p>')
+        // $('body').append('<p>Correct: '+Correct+'</p>')
+        // $('body').append('<p>Incorrect: '+Incorrect+'</p>')
         GameStarted = true
         displaySelectedNotes()
         playGame()
@@ -43,8 +45,28 @@ $( document ).ready(function() {
 
     $('body').on('click', '.current', function(event) {
         guessedNote = $(event.target).parent().attr('id')
-        debugger;
         // marks this note as the guessed one
+        if (randomNote === guessedNote) {
+                alert("Correct! Get ready to hear your next note");
+                randomNote = playRandomNote(notesToPlay);
+                Correct += 1 
+            } else {
+                Incorrect += 1
+                alert("Oops... You have one more guess");
+                playSound([randomNote])
+
+                if (randomNote === guessedNote) {
+                    alert("Correct!");
+                    Correct += 1 
+                } else {
+                    Incorrect +=1
+                    randomNote = playRandomNote(notesToPlay);
+                }
+            }
+        if (Correct === 6){
+            Turn += 1
+            alert("DONE!");
+        }    
     })
 
     function displaySelectedNotes() {
@@ -65,13 +87,16 @@ $( document ).ready(function() {
         playSound(notesToPlay)
 
         // until the game is over
-            // play sound and then check user guess
+        
+        // play sound and then check user guess
+        randomNote = playRandomNote(notesToPlay)
+
     }
 
     function playRandomNote(notes) {
         let selectedSound = notes[Math.floor(Math.random()*notes.length)]
         playSound([selectedSound])
-
+        return selectedSound;
     }
 
 });
