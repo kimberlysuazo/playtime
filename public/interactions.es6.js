@@ -23,30 +23,31 @@ function displaySelectedNotes() {
 }
 
 
-function playGame() {
-  console.log("playgame")
-  let thirdNote = Turn*3 + 3;
-  var notesToPlay = []
-  for (let i = Turn*3; i < thirdNote; i++) {
-    notesToPlay.push(notes[i])
-  }
-  playSound(notesToPlay)
-
-  // until the game is over
-
-  // play sound and then check user guess
-  // randomNote = playRandomNote(notesToPlay)
-  return notesToPlay
-}
+// function playGame() {
+//   console.log("playgame")
+//   let thirdNote = Turn*3 + 3;
+//   var notesToPlay = []
+//   for (let i = Turn*3; i < thirdNote; i++) {
+//     notesToPlay.push(notes[i])
+//   }
+//   playSound(notesToPlay)
+//
+//   // until the game is over
+//
+//   // play sound and then check user guess
+//   // randomNote = playRandomNote(notesToPlay)
+//   return notesToPlay
+// }
 
 function playRandomNote(notes) {
+    var piano = Synth.createInstrument('piano')
     console.log(notes)
     let selectedSound = notes[Math.floor(Math.random()*notes.length)]
-    playSound([selectedSound])
+    setTimeout(function(){
+      piano.play(selectedSound, 4, 4)
+    }, 5000)
     return selectedSound;
 }
-
-
 
 function playSound(noteAry) {
   var piano = Synth.createInstrument('piano');
@@ -58,7 +59,6 @@ function playSound(noteAry) {
   })
     return noteAry
 }
-
 
 $( document ).ready(function() {
     // when top bar of notes are clicked
@@ -85,6 +85,7 @@ $( document ).ready(function() {
         gamePromise
         .then(playSound)
         .then(playRandomNote)
+        //then gameLogic --selectedSound is passed to next callback
     })
 
 
