@@ -2,7 +2,7 @@ var Correct = 0
 var GameStarted = false
 var Incorrect = 0
 var Turn = 0
-var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+var notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 var guessedNote
 var randomNote
 
