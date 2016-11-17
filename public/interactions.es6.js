@@ -5,49 +5,36 @@ var Turn = 0
 var notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 var guessedNote
 var randomNote
+var correctGuess = false 
+var currNotes 
 
 
 function displaySelectedNotes() {
-    console.log(Turn)
-    $('body').append('<p>Your Current Notes Are: </p>')
-    let currNotes = $('.notes').clone().splice(Turn*3,Turn*3+3)
+    $('#selected-notes').append('<p>Your Current Notes Are: </p>')
+    currNotes = $('.notes').clone().splice(Turn*3,3)
     $(currNotes).addClass('current')
-    $('body').append(currNotes)
+    $('#selected-notes').append(currNotes)
     // debugger;
     let thirdNote = Turn*3 + 3;
     var notesToPlay = []
     for (let i = Turn*3; i < thirdNote; i++) {
       notesToPlay.push(notes[i])
     }
+
     return notesToPlay;
 }
 
 
-// function playGame() {
-//   console.log("playgame")
-//   let thirdNote = Turn*3 + 3;
-//   var notesToPlay = []
-//   for (let i = Turn*3; i < thirdNote; i++) {
-//     notesToPlay.push(notes[i])
-//   }
-//   playSound(notesToPlay)
-//
-//   // until the game is over
-//
-//   // play sound and then check user guess
-//   // randomNote = playRandomNote(notesToPlay)
-//   return notesToPlay
-// }
-
-function playRandomNote(notes) {
+function playRandomNote(notes, timing) {
     var piano = Synth.createInstrument('piano')
     console.log(notes)
-    let selectedSound = notes[Math.floor(Math.random()*notes.length)]
+    selectedSound = notes[Math.floor(Math.random()*notes.length)]
     setTimeout(function(){
       piano.play(selectedSound, 4, 4)
-    }, 5000)
-    return selectedSound;
+    }, timing)
+    randomNote = selectedSound;
 }
+
 
 function playSound(noteAry) {
   var piano = Synth.createInstrument('piano');
@@ -60,6 +47,41 @@ function playSound(noteAry) {
     return noteAry
 }
 
+function gameLogic() {
+    $('body').on('click', '.current', function(event) {
+        guessedNote = $(event.target).parent().attr('id')
+
+        if ((randomNote === guessedNote) && Turn < 4) {
+            setTimeout(function(){
+                alert("Correct! Get ready to hear your next note")}, 1000)
+            Correct += 1
+            playRandomNote(notesToPlay, 4000)
+        } else {
+            Incorrect += 1
+            setTimeout(function(){ 
+                alert("Oops... wrong guess")}, 1000)
+        }
+
+        if (Correct === 1) {
+            Turn += 1 
+            $("#selected-notes").empty()
+            notesToPlay = displaySelectedNotes();
+            setTimeout(function(){playSound(notesToPlay)}, 2000)
+            setTimeout(function(){playRandomNote(notesToPlay, 6000)})
+            Correct = 0
+        }
+
+        if (Turn > 3) {
+            alert("Hooray! you're done and now have perfect pitch")
+            $("#selected-notes").empty()
+            $('#start-game').css({display: "block"})
+        }
+
+
+    })
+          
+}
+
 $( document ).ready(function() {
     // when top bar of notes are clicked
     $('body').on('click', '.notes', function(event) {
@@ -70,51 +92,23 @@ $( document ).ready(function() {
         let note = $(event.target).parent().attr('id')
         playSound([note])
     })
-
+    console.log("before craziness", Correct)
     $('#start-game').on('click', function () {
-        $(this).remove()
-        // $('body').append('<p>Correct: '+Correct+'</p>')
-        // $('body').append('<p>Incorrect: '+Incorrect+'</p>')
+        $(this).css({display: "none"})
         GameStarted = true
-        // displaySelectedNotes()
-        // playGame()
-        var gamePromise = new Promise(function(resolve, reject) {
-          resolve(displaySelectedNotes());
-        })
-
-        gamePromise
-        .then(playSound)
-        .then(playRandomNote)
-        //then gameLogic --selectedSound is passed to next callback
+        notesToPlay = displaySelectedNotes();
+        playSound(notesToPlay)
+        playRandomNote(notesToPlay, 4000)
+        gameLogic();
+        
     })
-
-
-
-
-    $('body').on('click', '.current', function(event) {
-        guessedNote = $(event.target).parent().attr('id')
-        // marks this note as the guessed one
-        if (randomNote === guessedNote) {
-                alert("Correct! Get ready to hear your next note");
-                randomNote = playRandomNote(notesToPlay);
-                Correct += 1
-            } else {
-                Incorrect += 1
-                alert("Oops... You have one more guess");
-                playSound([randomNote])
-
-                if (randomNote === guessedNote) {
-                    alert("Correct!");
-                    Correct += 1
-                } else {
-                    Incorrect +=1
-                    randomNote = playRandomNote(notesToPlay);
-                }
-            }
-        if (Correct === 6){
-            Turn += 1
-            alert("DONE!");
-        }
-    })
-
+        
 });
+
+
+
+
+
+   
+
+
